@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MoviesApp.Data;
@@ -17,20 +18,15 @@ namespace MoviesApp.Helpers
         {
             ConsoleHelper.WriteCaller();
 
-            var count = 0;
             var films = MoviesContext.Instance.Films;
-            count++;
             foreach (var film in films)
             {
                 MoviesContext.Instance.Entry(film).Collection(f => f.FilmActors).Load();
-                count++;
                 foreach (var filmActor in film.FilmActors)
                 {
                     MoviesContext.Instance.Entry(filmActor).Reference(fa => fa.Actor).Load();
-                    count++;
                 }
             }
-            Console.WriteLine($"total queries: {count}");
         }
 
         private static void OptimizedQuery()
@@ -48,8 +44,6 @@ namespace MoviesApp.Helpers
                     // do nothing
                 }
             }
-
-            Console.WriteLine("Only one query executed.");
         }
     }
 }
